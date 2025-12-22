@@ -1,62 +1,64 @@
+using TMPro;
 using UnityEngine;
 
 public class Pawn : MonoBehaviour
 {
     [Header("Movement")]
-    public float moveSpeed = 5f;
-    public float turnSpeed = 10f;
-    
+    public float moveSpeed;
 
-    [Header("Components")]
-    public Health health;
-    public Death death;
+    private int coinCounter = 0;
+    public TMP_Text counterText;
 
-    
-
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-      health = GetComponent<Health>();
-      death = GetComponent<Death>();  
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
-
-    public void MoveForward(float moveSpeed)
+    public void MoveFoward(float moveSpeed)
     {
         // Change my pawn's position -- in the forward direction, magnitude of moveSpeed
-        // Get the transform component
-        transform.position = transform.position + ( Vector3.up * moveSpeed);
+        // Get he transform component
+        transform.position = transform.position + (Vector3.up * moveSpeed * Time.deltaTime);
     }
 
     public void MoveBackward(float moveSpeed)
     {
-        transform.position = transform.position + (Vector3.down * moveSpeed);
-    }
-
-    public void MoveLeft(float moveSpeed)
-    {
-        transform.position = transform.position + (Vector3.left * moveSpeed);
+        transform.position = transform.position + (Vector3.down * moveSpeed * Time.deltaTime);
     }
 
     public void MoveRight(float moveSpeed)
     {
-        transform.position = transform.position + (Vector3.right * moveSpeed);
+        transform.position = transform.position + (Vector3.right * moveSpeed * Time.deltaTime);
     }
+
+    public void MoveLeft(float moveSpeed)
+    {
+        transform.position = transform.position + (Vector3.left * moveSpeed * Time.deltaTime);
+    }
+
     public void RotateClockwise(float rotateValue)
     {
-        transform.Rotate(0.0f, 0.0f, rotateValue * turnSpeed);
+        transform.Rotate(0.0f, 0.0f, rotateValue * Time.deltaTime);
     }
 
-    public void RotateCounterClockwise ( float rotateValue)
+    public void RotateCounterClockwise(float rotateValue)
     {
-        transform.Rotate(0.0f, 0.0f, -rotateValue * turnSpeed);
+        transform.Rotate(0.0f, 0.0f, -rotateValue * Time.deltaTime);
     }
 
+    private void OnTriggerEnter2D(Collider collision)
+    {
+        if (collision.CompareTag("Coin") && collision.gameObject.activeSelf)
+        {
+            collision.gameObject.SetActive(false);
+            coinCounter += 1;
+            counterText.text = "Coins: " + coinCounter;
+        }
+    }
 }
